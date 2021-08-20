@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <meta name="description" content="Bootstrap Admin App">
+   <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
+   <link rel="icon" type="image/x-icon" href="{% static 'img/favicon_orange.png' %}">
+   <title>TRICK</title><!-- =============== VENDOR STYLES ===============-->
+   <!-- FONT AWESOME-->
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/brands.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/regular.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/solid.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/fontawesome.css' %}"><!-- SIMPLE LINE ICONS-->
+   <link rel="stylesheet" href="{% static 'vendor/simple-line-icons/css/simple-line-icons.css' %}"><!-- =============== BOOTSTRAP STYLES ===============-->
+   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" id="bscss"><!-- =============== APP STYLES ===============-->
+   <link rel="stylesheet" href="{% static 'css/app.css' %}" id="maincss">
+
+      <!-- =============== VENDOR SCRIPTS ===============-->
+<!--   &lt;!&ndash; MODERNIZR&ndash;&gt;-->
+<!--   <script src="{% static 'vendor/modernizr/modernizr.custom.js' %}"></script>&lt;!&ndash; STORAGE API&ndash;&gt;-->
+<!--   <script src="{% static 'vendor/js-storage/js.storage.js' %}"></script>&lt;!&ndash; i18next&ndash;&gt;-->
+<!--   <script src="{% static 'vendor/i18next/i18next.js' %}"></script>-->
+<!--   <script src="{% static 'vendor/i18next-xhr-backend/i18nextXHRBackend.js' %}"></script>-->
+<!--&lt;!&ndash;    BOOTSTRAP&ndash;&gt;-->
+<!--   <script src="{% static 'vendor/popper.js/dist/umd/popper.js' %}"></script>-->
+<!--   <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script>&lt;!&ndash; PARSLEY&ndash;&gt;-->
+<!--   <script src="{% static 'vendor/parsleyjs/dist/parsley.js' %}"></script>&lt;!&ndash; =============== APP SCRIPTS ===============&ndash;&gt;-->
+   <script src="{% static 'js/app.js' %}"></script>
+      <!-- JQUERY-->
+   <script src="{% static 'vendor/jquery/dist/jquery.js' %}"></script>
+
+   <script>
+    function sucregister(formData){
+        $.ajax({
+            url:'registerimpl',
+            type : 'POST',
+            data: formData,
+            datatype:'JSON',
+            success:function(data){
+               var res = data['result'];
+                alert(res);
+            },
+            error : function(xhr,status,){
+               console.log("통신 실패");
+            },
+        });
+    };
+
+    $(document).ready(function(){
+        $('#registerForm button[type=submit]').click(function(){
+            if ($("#type_check").prop("checked")){
+                $("#inputtype").val("envir");
+            }else{
+               $("#inputtype").val("normal");
+            }
+           var formData = $("#registerForm").serialize();
+           sucregister(formData);
+       });
+   });
+
+
+   </script>
+</head>
+
+<body>
+   <div class="wrapper">
+      <div class="block-center mt-4 wd-xl">
+         <!-- START card-->
+         <div class="card card-flat">
+            <div class="card-header text-center bg-dark"><a href="#"><img class="block-center" src="{% static 'img/logomain.png' %}" alt="Image"></a></div>
+            <div class="card-body">
+               <p class="text-center py-2">SIGNUP TO GET INSTANT ACCESS.</p>
+               <form class="mb-3" id="registerForm" novalidate>
+                  {% csrf_token %}
+                  <div class="form-group"><label class="text-muted">ID</label>
+                     <div class="input-group with-focus"><input class="form-control border-right-0" name="inputid" type="text" placeholder="Enter ID" autocomplete="off" required>
+                        <div class="input-group-append"><span class="input-group-text text-muted bg-transparent border-left-0"><em class="fa fa-address-card"></em></span></div>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="text-muted" >Name</label>
+                     <div class="input-group with-focus"><input class="form-control border-right-0" name="inputname" type="text" placeholder="Enter Name" autocomplete="off" required>
+                        <div class="input-group-append"><span class="input-group-text text-muted bg-transparent border-left-0"><em class="fa fa-meh"></em></span></div>
+                     </div>
+                  </div>
+                  <div class="form-group"><label class="text-muted" >Password</label>
+                     <div class="input-group with-focus"><input class="form-control border-right-0" id="firstpwd" name="inputpwd" type="password" placeholder="Password" autocomplete="off" required>
+                        <div class="input-group-append"><span class="input-group-text text-muted bg-transparent border-left-0"><em class="fa fa-lock"></em></span></div>
+                     </div>
+                  </div>
+                  <div class="form-group"><label class="text-muted">Retype Password</label>
+                     <div class="input-group with-focus"><input class="form-control border-right-0"  name="inputrepwd" type="password" placeholder="Retype Password" autocomplete="off" required data-parsley-equalto="#firstpwd">
+                        <div class="input-group-append"><span class="input-group-text text-muted bg-transparent border-left-0"><em class="fa fa-lock"></em></span></div>
+                     </div>
+                     <label><input type="hidden" id="inputtype" name="inputtype"><span></span></label>
+                     <label class="switch switch-sm" style="margin-left: 5px; margin-bottom: 5px;"><p style="margin-top: 12px; margin-right: 10px; color: #767676; ">Are you Envirmental Worker? </p><input type="checkbox" id="type_check" name="type_check"><span></span></label>
+                  </div>
+                  <button class="btn btn-block btn-primary mt-3" id ="submit_btn" type="submit">Create account</button>
+
+               </form>
+               <p class="pt-3 text-center">Have an account?</p><a class="btn btn-block btn-secondary" href="login">Signup</a>
+            </div>
+         </div><!-- END card-->
+         <div class="p-3 text-center"><span class="mr-2">&copy;</span><span>2021</span><span class="mr-2">-</span><span>TRICK</span><br><span>Multi Campus</span></div>
+      </div>
+   </div>
+</body>
+
+</html>

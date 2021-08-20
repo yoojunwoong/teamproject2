@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <meta name="description" content="Bootstrap Admin App">
+   <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
+   <link rel="icon" type="image/x-icon" href="{% static 'img/favicon_orange.png' %}">
+   <title>TRICK</title><!-- =============== VENDOR STYLES ===============-->
+   <!-- FONT AWESOME-->
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/brands.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/regular.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/solid.css' %}">
+   <link rel="stylesheet" href="{% static 'vendor/@fortawesome/fontawesome-free/css/fontawesome.css' %}"><!-- SIMPLE LINE ICONS-->
+   <link rel="stylesheet" href="{% static 'vendor/simple-line-icons/css/simple-line-icons.css' %}"><!-- ANIMATE.CSS-->
+   <link rel="stylesheet" href="{% static 'vendor/animate.css/animate.css' %}"><!-- WHIRL (spinners)-->
+   <link rel="stylesheet" href="{% static 'vendor/whirl/dist/whirl.css' %}"><!-- =============== PAGE VENDOR STYLES ===============-->
+   <!-- WEATHER ICONS-->
+   <!-- =============== BOOTSTRAP STYLES ===============-->
+   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" id="bscss"><!-- =============== APP STYLES ===============-->
+   <link rel="stylesheet" href="{% static 'vendor/morris.js.so/morris.css' %}">
+   <link rel="stylesheet" href="{% static 'css/app.css' %}" id="maincss">
+   <script src="http://code.jquery.com/jquery-1.7.js"></script>
+   <script>
+      function card1(){
+          $.ajax({
+              url:'card1',
+              async: false,
+              datatype:'JSON',
+              success:function(data){
+                  document.getElementById('sjh').setAttribute('data-values',data.data);
+                  $('#today_g').text(data.today_g+" kg")
+                  $('#today_g_sub').text(data.today+"일자 총 음식물쓰레기양")
+              }
+          })
+      };
+
+      function card2(){
+          $.ajax({
+              url:'card2',
+              async: false,
+              datatype:'JSON',
+              success:function(data){
+                  document.getElementById('sjh2').setAttribute('data-values',data.data);
+                  $('#today_amt').text(data.today_amt+" 만원")
+                  $('#today_amt_sub').text(data.today+"일자 총 사용금액")
+              }
+          })
+      };
+
+      $(document).ready(function(){
+         card1();
+         card2();
+      });
+   </script>
+</head>
+<body>
+   <div class="wrapper">
+      <!-- top navbar-->
+      <header class="topnavbar-wrapper">
+         <!-- START Top Navbar-->
+         <nav class="navbar topnavbar">
+            <!-- START navbar header-->
+            <div class="navbar-header"><a class="navbar-brand" href="#/">
+                  <div class="brand-logo"><img class="img-fluid" src="{% static 'img/logomain.png' %}" alt="App Logo"></div>
+                  <div class="brand-logo-collapsed"><img class="img-fluid" src="{% static 'img/icon.png' %}" alt="App Logo"></div>
+               </a></div><!-- END navbar header-->
+            <!-- START Left navbar-->
+            <ul class="navbar-nav mr-auto flex-row">
+               <li class="nav-item">
+                  <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops--><a class="nav-link d-none d-md-block d-lg-block d-xl-block" href="#" data-trigger-resize="" data-toggle-state="aside-collapsed"><em class="fas fa-bars"></em></a><!-- Button to show/hide the sidebar on mobile. Visible on mobile only.--><a class="nav-link sidebar-toggle d-md-none" href="#" data-toggle-state="aside-toggled" data-no-persist="true"><em class="fas fa-bars"></em></a>
+               </li><!-- START User avatar toggle-->
+               <li class="nav-item d-none d-md-block">
+                  <!-- Button used to collapse the left sidebar. Only visible on tablet and desktops--><a class="nav-link" id="user-block-toggle" href="#user-block" data-toggle="collapse"><em class="icon-user"></em></a>
+               </li><!-- END User avatar toggle-->
+               <!-- Fullscreen (only desktops)-->
+               <li class="nav-item d-none d-md-block"><a class="nav-link" href="#" data-toggle-fullscreen=""><em class="fas fa-expand"></em></a></li>
+            </ul><!-- END Left navbar-->
+
+         </nav><!-- END Top Navbar-->
+      </header><!-- sidebar-->
+      <aside class="aside-container">
+         <!-- START Sidebar (left)-->
+         <div class="aside-inner">
+            <nav class="sidebar" data-sidebar-anyclick-close="">
+               <!-- START sidebar nav-->
+               <ul class="sidebar-nav">
+                  <!-- START user info -->
+                     <li class="has-user-block">
+                     <div class="collapse" id="user-block">
+                        <div class="item user-block">
+                           <!-- User picture-->
+                           {% if loginok %}
+                              <div class="user-block-picture">
+                              <div class="user-block-status">
+                                 {% if type == 10 %}
+                                    <img class="img-thumbnail rounded-circle" src="{% static 'img/user/normaluser.png' %}" alt="Avatar" width="60" height="60">
+                                 {% else %}
+                                    <img class="img-thumbnail rounded-circle" src="{% static 'img/user/enviruserimg.png' %}" alt="Avatar" width="60" height="60">
+                                 {% endif %}
+                                 <div class="circle bg-success circle-lg"></div>
+                              </div>
+                           </div><!-- Name and Job-->
+                              <div class="user-block-info"><span class="user-block-name">hello, {{name}}</span>
+
+                                 <span class="user-block-role">
+                                    {% if type == 10 %}
+                                       normal user
+                                    {% else %}
+                                       environmental worker
+                                    {% endif %}
+                                 </span></div>
+                           {% else %}
+                           <div style="text-align: center;"><a href="login"><button class="mb-1 btn btn-purple" type="button">Login</button></a></div>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </li>
+                  <!-- END user info-->
+                  <!-- Iterates over all sidebar items-->
+                  <li class="nav-heading "><span data-localize="sidebar.heading.HEADER">Main Navigation</span></li>
+                  <li class=" "><a href="#dashboard" title="Dashboard" data-toggle="collapse" class="collapsed" aria-expanded="false">
+                        <div class="float-right badge badge-success">new</div><em class="icon-compass"></em><span data-localize="sidebar.nav.DASHBOARD">Main</span>
+                     </a>
+                     <ul class="sidebar-nav sidebar-subnav collapse" id="dashboard" style="">
+                        <li class=" "><a href="dashboard" title="Dashboard v1"><span>Jeju Data Analysis</span></a></li>
+                     </ul>
+                  </li>
+
+                  {%if type == 00 %}
+                  <li class=" "><a href="workerboard" title="Worker Board">
+                        <div class="float-right badge badge-success">new</div><em class="icon-drop"></em><span data-localize="sidebar.nav.WIDGETS">Worker Board </span>
+                     </a>
+                  </li>
+                  {% elif type == 10 %}
+                  <li class=" "><a href="userboard" title="User Board">
+                        <div class="float-right badge badge-success">new</div><em class="icon-chart"></em><span data-localize="sidebar.nav.WIDGETS">My Data Analysis</span>
+                     </a>
+                  </li>
+                  {% endif %}
+               </ul><!-- END sidebar nav-->
+            </nav>
+         </div><!-- END Sidebar (left)-->
+      </aside>
+      <!-- Main section-->
+      {% if section != None %}
+        {% include section %}
+      {% else %}
+      <section class="section-container">
+         <!-- Page content-->
+         <div class="content-wrapper">
+            <div class="content-heading">
+               <div>Dashboard<small data-localize="dashboard.WELCOME"></small></div>
+
+            </div>
+            <!-- START cards box-->
+            <div class="row">
+               <div class="col-xl-6 col-md-12">
+                  <!-- START  total waste card-->
+                  <div class="card bg-info-light pt-2 b0">
+                     <div class="px-2"><em class="icon-reload fa-lg float-right" href="#"></em>
+                        <div class="h2 mt-0" id="today_g">숫자</div>
+                        <div class="text-uppercase" id="today_g_sub">2021.06.30 총 음식물쓰레기양(kg)</div>
+                     </div>
+                     <div id="sjh" data-sparkline="" data-type="line" data-width="100%" data-height="75px" data-line-color="#23b7e5" data-chart-range-min="85000" data-fill-color="#23b7e5" data-spot-color="#FFC314" data-min-spot-color="#FFC314" data-max-spot-color="#FFC314" data-highlight-spot-color="#FFC314" data-highlight-line-color="#23b7e5" data-values="10000,34345,23422,13422,76302,45621" style="margin-bottom: -2px" data-resize="true"><canvas width="166" height="75" style="display: inline-block; width: 166.502px; height: 75px; vertical-align: top;"></canvas></div>
+                  </div>
+               </div>
+               <div class="col-xl-6 col-md-12">
+                  <!-- START card-->
+                  <div class="card bg-purple-light pt-2 b0">
+                     <div class="px-2"><em class="icon-reload fa-lg float-right"></em>
+                        <div class="h2 mt-0" id="today_amt"><span class="text-sm text-white">GB</span></div>
+                        <div class="text-uppercase" id="today_amt_sub"></div>
+                     </div>
+                     <div id="sjh2" data-sparkline="" data-type="line" data-width="100%" data-height="75px" data-line-color="#7266ba" data-chart-range-min="250" data-fill-color="#7266ba" data-spot-color="#7266ba" data-min-spot-color="#FFC314" data-max-spot-color="#FFC314" data-highlight-spot-color="#FFC314" data-highlight-line-color="#7266ba" data-values="1,4,5,4,8,7,10" style="margin-bottom: -2px" data-resize="true"></div>
+                  </div>
+               </div>
+            </div>
+            <!-- END cards box-->
+
+            <!-- START dashboard main content-->
+            <div class="row">
+<!--               total waste data-->
+               <div class="col-xl-6">
+                  <!-- START chart-->
+                  <div class="row">
+                     <div class="col-xl-12">
+                        <!-- START card-->
+                        <div class="card card-default card-demo" id="cardChart9">
+                           <div class="card-header"><a class="float-right" href="#" data-tool="card-refresh" data-toggle="tooltip" title="Refresh card"><em class="fas fa-sync"></em></a><a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="Collapse card"><em class="fa fa-minus"></em></a>
+                              <div class="card-title">2021년 월별 음식물 쓰레기 배출량 Chart</div>
+                           </div>
+                           <div class="card-wrapper">
+                              <div class="card-body">
+                                 <div class="chart-splinev3 flot-chart"></div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- END card-->
+                     </div>
+                  </div>
+                  <!-- END chart-->
+
+                  <!-- START chart-->
+                  <div class="row">
+                     <div class="col-xl-12">
+                        <!-- START card-->
+                        <div class="card card-default card-demo" id="cardmap2">
+                           <div class="card-header"><a class="float-right" href="#" data-tool="card-refresh" data-toggle="tooltip" title="Refresh card"><em class="fas fa-sync"></em></a><a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="Collapse card"><em class="fa fa-minus"></em></a>
+                              <div class="card-title">2021년 요일별 음식물 쓰레기 배출량 Map</div>
+                           </div>
+                           <div class="card-wrapper">
+                              {% autoescape off %}
+                                 <div class="card-body">
+   <!--                                 here map chart in food waste -->
+                                    {{ plot_div1 }}
+                                 </div>
+                              {% endautoescape %}
+                           </div>
+                        </div>
+                        <!-- END card-->
+                     </div>
+                  </div>
+                  <!-- END chart-->
+               </div>
+
+<!--                  total waste amount-->
+               <div class="col-xl-6">
+                  <div class="card card-default card-demo" id="cardcharts">
+                           <div class="card-header"><a class="float-right" href="#" data-tool="card-refresh" data-toggle="tooltip" title="Refresh card"><em class="fas fa-sync"></em></a><a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="Collapse card"><em class="fa fa-minus"></em></a>
+                              <div class="card-title">2021년 월별 사용 금액 Chart</div>
+                           </div>
+                           <div class="card-wrapper">
+                              <div class="card-body">
+                                  <div class="chart-spline flot-chart"></div>
+                              </div>
+                           </div>
+                        </div><!-- END card-->
+
+                  <!-- START chart-->
+                  <div class="row">
+                     <div class="col-xl-12">
+                        <!-- START card-->
+                        <div class="card card-default card-demo" id="cardmap">
+                           <div class="card-header"><a class="float-right" href="#" data-tool="card-refresh" data-toggle="tooltip" title="Refresh card"><em class="fas fa-sync"></em></a><a class="float-right" href="#" data-tool="card-collapse" data-toggle="tooltip" title="Collapse card"><em class="fa fa-minus"></em></a>
+                              <div class="card-title">2021년 요일별 사용 금액 Map</div>
+                           </div>
+                           <div class="card-wrapper">
+                              {% autoescape off %}
+                              <div class="card-body">
+<!--                                 here map chart in waste -->
+                                 {{ plot_div2 }}
+                              </div>
+                              {% endautoescape %}
+                           </div>
+                        </div>
+                        <!-- END card-->
+                     </div>
+                  </div>
+                  <!-- END chart-->
+               </div>
+            </div>
+         </div>
+      </section>
+    {% endif %}
+
+
+      <!-- Page footer-->
+      <footer class="footer-container"><span>&copy; 2021 - TRICK</span></footer>
+   </div><!-- =============== VENDOR SCRIPTS ===============-->
+   <!-- MODERNIZR-->
+   <script src="{% static 'vendor/modernizr/modernizr.custom.js' %}"></script><!-- STORAGE API-->
+   <script src="{% static 'vendor/js-storage/js.storage.js' %}"></script><!-- SCREENFULL-->
+   <script src="{% static 'vendor/screenfull/dist/screenfull.js' %}"></script><!-- i18next-->
+   <script src="{% static 'vendor/i18next/i18next.js' %}"></script>
+   <script src="{% static 'vendor/i18next-xhr-backend/i18nextXHRBackend.js' %}"></script>
+   <script src="{% static 'vendor/jquery/dist/jquery.js' %}"></script>
+   <script src="{% static 'vendor/popper.js/dist/umd/popper.js' %}"></script>
+   <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script><!-- =============== PAGE VENDOR SCRIPTS ===============-->
+   <!-- SLIMSCROLL-->
+   <script src="{% static 'vendor/jquery-slimscroll/jquery.slimscroll.js' %}"></script><!-- SPARKLINE-->
+   <script src="{% static 'vendor/jquery-sparkline/jquery.sparkline.js' %}"></script><!-- FLOT CHART-->
+   <script src="{% static 'vendor/flot/jquery.flot.js' %}"></script>
+   <script src="{% static 'vendor/jquery.flot.tooltip/js/jquery.flot.tooltip.js' %}"></script>
+   <script src="{% static 'vendor/flot/jquery.flot.resize.js' %}"></script>
+   <script src="{% static 'vendor/flot/jquery.flot.pie.js' %}"></script>
+   <script src="{% static 'vendor/flot/jquery.flot.time.js' %}"></script>
+   <script src="{% static 'vendor/flot/jquery.flot.categories.js' %}"></script>
+   <script src="{% static 'vendor/jquery.flot.spline/jquery.flot.spline.js' %}"></script><!-- EASY PIE CHART-->
+   <script src="{% static 'vendor/easy-pie-chart/dist/jquery.easypiechart.js' %}"></script><!-- MOMENT JS-->
+   <script src="{% static 'vendor/moment/min/moment-with-locales.js' %}"></script>
+   <script src="{% static 'js/app.js' %}"></script>
+<!-- =============== APP SCRIPTS ===============-->
+</body>
+
+</html>
